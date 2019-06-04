@@ -16,11 +16,14 @@ import arcade
 class GameWindow(arcade.Window):
     def __init__(self, width=800, height=600, title='Shitty Blackjack', fullscreen=False, resizable=False, update_rate=1 /60, antialiasing=True):
         return super().__init__(width=width, height=height, title=title, fullscreen=fullscreen, resizable=resizable, update_rate=update_rate, antialiasing=antialiasing)
-
+    
+    def on_draw(self): #Is function called when the class GameWindow is created or at 'arcade.run()'?
+        arcade.set_background_color(arcade.color.ANTIQUE_RUBY)
+        arcade.start_render()
+        #return super().on_draw() #This line doesn't seem to add anything. What is it for?
 #   WRITE CODE ABOVE THIS LINE
 if __name__ == "__main__": #Runs indented code if this file is regarded as "main"
     #import arcade #Imports 'Arcade' library so that we can actually use it in the file.
     print("* Using Arcade version",arcade.VERSION,"*")
-    #openWindow()
     unit = GameWindow()
     arcade.run()
