@@ -1,29 +1,33 @@
+# -*- coding: utf-8 -*-
 import sys
 import os
 
-if sys.platform == "darwin": #If the user's OS = MacOS...
-    os.system('pip3 install --user arcade') #Installs files necessary for the 'Arcade' library.
+if sys.platform == "darwin":  # If the user's OS = MacOS...
+    # Installs files necessary for the 'PyGame' library.
+    os.system('pip3 install --user pygame')
     print("* Finished library install *")
 
-if sys.platform == "win32": #If the user's OS = Windows...
-    os.system('pip install --user arcade') 
+if sys.platform == "win32":  # If the user's OS = Windows...
+    os.system('pip install --user pygame')
     print("* Finished library install *")
 
-import arcade
+import pygame
+print("* Using PyGame version", pygame.__version__.__str__(), "*")
 
-#arcade.open_window(width,height,"Window") #This line causes MacOS to generate a ApplePersistenceIgnoreState warning. Enter command 'defaults write org.python.python ApplePersistenceIgnoreState NO' to solve.
 
-class GameWindow(arcade.Window):
-    def __init__(self, width=800, height=600, title='Shitty Blackjack', fullscreen=False, resizable=False, update_rate=1 /60, antialiasing=True):
-        return super().__init__(width=width, height=height, title=title, fullscreen=fullscreen, resizable=resizable, update_rate=update_rate, antialiasing=antialiasing)
-    
-    def on_draw(self): #Is function called when the class GameWindow is created or at 'arcade.run()'?
-        arcade.set_background_color(arcade.color.ANTIQUE_RUBY)
-        arcade.start_render()
-        #return super().on_draw() #This line doesn't seem to add anything. What is it for?
-#   WRITE CODE ABOVE THIS LINE
-if __name__ == "__main__": #Runs indented code if this file is regarded as "main"
-    #import arcade #Imports 'Arcade' library so that we can actually use it in the file.
-    print("* Using Arcade version",arcade.VERSION,"*")
-    unit = GameWindow()
-    arcade.run()
+def setup():
+    # Create screen
+    pygame.init()  # This line causes an APIS warning on MacOS. Check "Issues"
+    screen = pygame.display.set_mode((1280, 800))
+    pygame.display.set_caption('Shitty Blackjack')
+
+    # Set background
+    background = pygame.Surface(screen.get_size())
+    background = background.convert()
+    background.fill((190, 0, 0))
+
+
+def main():
+    setup()
+
+main()  # Last line of code, runs main code.
