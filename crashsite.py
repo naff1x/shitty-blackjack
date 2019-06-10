@@ -14,6 +14,12 @@ if sys.platform == "win32":  # If the user's OS = Windows...
 import pygame
 print("* Using PyGame version", pygame.__version__.__str__(), "*")
 
+x = 20
+y = 20
+width = 20
+height = 20
+vel = 5
+
 
 def setup():
     # Create screen
@@ -33,12 +39,26 @@ def setup():
 
 
 def eventLoop(screen, background):
+    global width, height, x, y, vel
     while 1:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
-    screen.blit(background, (0, 0))
-    pygame.display.flip()
+
+        keys = pygame.key.get_pressed()
+
+        if keys[pygame.K_LEFT] and x > vel:
+            x -= vel
+        if keys[pygame.K_RIGHT] and x < 1280-width-vel:
+            x += vel
+        if keys[pygame.K_UP] and y > vel:
+            y -= vel
+        if keys[pygame.K_DOWN] and y < 800-height-vel:
+            y += vel
+
+        screen.fill((150, 0, 50))
+        pygame.draw.rect(screen, (0, 0, 255), (x, y, width, height))
+        pygame.display.update()
 
 
 def main():
