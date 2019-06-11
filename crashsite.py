@@ -19,9 +19,22 @@ y = 20
 width = 20
 height = 20
 vel = 5
+loopBool = True
 
 
 def setup():
+    # Play background music
+    pygame.mixer.init()
+    bgmusic = ["audio/Sing_Swing_Bada_Bing.mp3",
+    "audio/Tiptoe_Out_the_Back.mp3",
+    "audio/Piano_Store.mp3"]
+    pygame.mixer_music.load(bgmusic[0])  # This song is played first
+    for i in range(1, len(bgmusic)):  # Queues the remaining songs
+        pygame.mixer_music.queue(bgmusic[i])
+        print("√ Queued song: ", bgmusic[i])
+    pygame.mixer_music.set_volume(0.001)  # Set to 1 at start of 'eventLoop'
+    pygame.mixer_music.play(-1)
+
     # Create screen
     pygame.init()  # This line causes an APIS warning on MacOS. Check "Issues"
     screen = pygame.display.set_mode((1280, 800))
@@ -32,6 +45,9 @@ def setup():
     background = background.convert()
     background.fill((150, 0, 50))
 
+    # Set cursor (optional)
+    pygame.mouse.set_cursor(*pygame.cursors.broken_x)
+
     # Blit to screen (render)
     screen.blit(background, (0, 0))
     pygame.display.flip()
@@ -39,8 +55,9 @@ def setup():
 
 
 def eventLoop(screen, background):
-    global width, height, x, y, vel
-    while 1:
+    global width, height, x, y, vel, loopBool
+    pygame.mixer_music.set_volume(1)
+    while loopBool:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 return
@@ -55,6 +72,8 @@ def eventLoop(screen, background):
             y -= vel
         if keys[pygame.K_DOWN] and y < 800-height-vel:
             y += vel
+        if keys[pygame.K_BACKSPACE]:
+            loopBool = False
 
         screen.fill((150, 0, 50))
         pygame.draw.rect(screen, (0, 0, 255), (x, y, width, height))
