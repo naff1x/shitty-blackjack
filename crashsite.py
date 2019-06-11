@@ -1,20 +1,22 @@
 # -*- coding: utf-8 -*-
-""" UN-COMMENT THIS CODE BEFORE RUNNING IT ON A COMPUTER FOR THE FIRST TIME!
-import sys
-import os
+try:
+    import sys
+    import os
+    import pygame
+    print("* Using PyGame version", pygame.__version__.__str__(), "*")
+except ImportError():
+    if sys.platform == "darwin":  # If the user's OS = MacOS...
+        # Installs files necessary for the 'PyGame' library.
+        os.system('pip3 install --user pygame')
+        print("* Finished library install *")
 
-if sys.platform == "darwin":  # If the user's OS = MacOS...
-    # Installs files necessary for the 'PyGame' library.
-    os.system('pip3 install --user pygame')
-    print("* Finished library install *")
-
-if sys.platform == "win32":  # If the user's OS = Windows...
-    os.system('pip install --user pygame')
-    print("* Finished library install *")
-"""
-import pygame
-print("* Using PyGame version", pygame.__version__.__str__(), "*")
-
+    if sys.platform == "win32":  # If the user's OS = Windows...
+        os.system('pip install --user pygame')
+        print("* Finished library install *")
+    import sys
+    import os
+    import pygame
+    print("* Using PyGame version", pygame.__version__.__str__(), "*")
 x = 20
 y = 200
 width = 20
@@ -50,6 +52,19 @@ def setup():
         background = pygame.Surface(screen.get_size())
         background = background.convert()
         background.fill((150, 0, 50))
+
+    # Draw menu buttons
+    topButton = pygame.Rect(490, 310, 300, 90)
+    pygame.draw.rect(background, (0, 255, 0), topButton, 2)
+
+    # Display text
+    menuFont = pygame.font.Font(None, 40)  # Create font to use
+    topButtonText = menuFont.render("Play", 1, (0, 0, 0))  # Create text object
+    topButtonTextRect = topButtonText.get_rect()  # Create figure for text
+    topButtonTextRect.center = (topButton.centerx,
+    topButton.centery)  # Set coords for the figure
+    background.blit(topButtonText, topButtonTextRect)  # Check comment below
+    # Render the text onto 'background' at the figure's coords
 
     # Set cursor (optional)
     pygame.mouse.set_cursor(*pygame.cursors.broken_x)
