@@ -17,16 +17,21 @@ except ImportError():
     import os
     import pygame
     print("* Using PyGame version", pygame.__version__.__str__(), "*")
-x = 20
-y = 200
-width = 20
-height = 20
-vel = 5
+
+# Colors
+green = (0, 200, 0)
+brightGreen = (70, 255, 70)
+
+white = (255, 255, 255)
+darkWhite = (200, 200, 200)
+
+# Game variables
+clock = pygame.time.Clock()
 loopBool = True
 
 
-def setup():
-    # Play background music
+def loadMenu():
+    # Prepare background music
     pygame.mixer.init()
     bgmusic = ["audio/Sing_Swing_Bada_Bing.mp3",
     "audio/Tiptoe_Out_the_Back.mp3",
@@ -38,7 +43,6 @@ def setup():
     pygame.mixer_music.set_volume(0.001)
     """ Volume is set to 1 at start of 'eventLoop'. This is done to avoid...
     a scratching noise when a song is loaded and played. """
-    pygame.mixer_music.play(-1)
 
     # Create screen
     pygame.init()  # This line causes an APIS warning on MacOS. Check "Issues"
@@ -46,63 +50,86 @@ def setup():
     pygame.display.set_caption('Shitty Blackjack')
 
     # Set background
-    try:
-        background = pygame.image.load("images/mainMenu.jpg").convert()
-    except FileNotFoundError():
-        background = pygame.Surface(screen.get_size())
-        background = background.convert()
-        background.fill((150, 0, 50))
+    background = pygame.image.load("images/mainMenu.jpg").convert()
 
-    # Draw menu buttons
-    topButton = pygame.Rect(490, 310, 300, 90)
-    pygame.draw.rect(background, (0, 255, 0), topButton, 2)
+    # Set menu buttons
+    playButton = pygame.Rect(490, 310, 300, 90)
+    instructionsButton = pygame.Rect(490, 445, 300, 90)
+    highScoreButton = pygame.Rect(490, 580, 300, 90)
 
-    # Display text
-    menuFont = pygame.font.Font(None, 40)  # Create font to use
-    topButtonText = menuFont.render("Play", 1, (0, 0, 0))  # Create text object
-    topButtonTextRect = topButtonText.get_rect()  # Create figure for text
-    topButtonTextRect.center = (topButton.centerx,
-    topButton.centery)  # Set coords for the figure
-    background.blit(topButtonText, topButtonTextRect)  # Check comment below
-    # Render the text onto 'background' at the figure's coords
+    # Set text
+    pygame.font.init()
+    menuFont = pygame.font.Font("fonts/Good Brush.ttf", 40)  # Create font to
+    playButtonText = menuFont.render("Play", 1, (0, 0, 0))  # Create text
+    playButtonTextRect = playButtonText.get_rect()  # Create figure for text
+    playButtonTextRect.center = (playButton.centerx,
+    playButton.centery)  # Set coords for the figure
+
+    instructionsButtonText = menuFont.render("Instructions", 1, (0, 0, 0))
+    instructionsButtonTextRect = instructionsButtonText.get_rect()
+    instructionsButtonTextRect.center = (instructionsButton.centerx,
+    instructionsButton.centery)
+
+    highScoreButtonText = menuFont.render("High Scores", 1, (0, 0, 0))
+    highScoreButtonTextRect = highScoreButtonText.get_rect()
+    highScoreButtonTextRect.center = (highScoreButton.centerx,
+    highScoreButton.centery)
 
     # Set cursor (optional)
     pygame.mouse.set_cursor(*pygame.cursors.broken_x)
 
-    # Blit to screen (render)
+    # Initial blit to screen (render)
     screen.blit(background, (0, 0))
     pygame.display.flip()
-    eventLoop(screen, background)
 
+    # Play background music
+    pygame.mixer_music.set_volume(0.75)
+    pygame.mixer_music.play(-1)
 
-def eventLoop(screen, background):
-    global width, height, x, y, vel, loopBool
-    pygame.mixer_music.set_volume(1)
+    global loopBool  # Set to 'True' by default
     while loopBool:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                return
+                loopBool = False
 
-        keys = pygame.key.get_pressed()
+        # Draw menu buttons
+        global green, brightGreen, white, darkWhite
+        pygame.draw.rect(background, brightGreen, playButton)
+        pygame.draw.rect(background, white, instructionsButton)
+        pygame.draw.rect(background, white, highScoreButton)
 
-        if keys[pygame.K_LEFT] and x > vel:
-            x -= vel
-        if keys[pygame.K_RIGHT] and x < 1280-width-vel:
-            x += vel
-        if keys[pygame.K_UP] and y > vel:
-            y -= vel
-        if keys[pygame.K_DOWN] and y < 800-height-vel:
-            y += vel
-        if keys[pygame.K_BACKSPACE]:
-            loopBool = False
+        # Set button reactions
+        mousePos = pygame.mouse.get_pos()
+        if 490+300 > mousePos[0] > 490 and 310+90 > mousePos[1] > 310:
+            background.fill(green, playButton)
+        else:
+            background.fill(brightGreen, playButton)
+
+        if 490+300 > mousePos[0] > 490 and 445+90 > mousePos[1] > 445:
+            background.fill(darkWhite, instructionsButton)
+        else:
+            background.fill(white, instructionsButton)
+
+        if 490+300 > mousePos[0] > 490 and 580+90 > mousePos[1] > 580:
+            background.fill(darkWhite, highScoreButton)
+        else:
+            background.fill(white, highScoreButton)
+
+        # Render texts onto 'background' so they cover the colored boxes
+        background.blit(playButtonText, playButtonTextRect)
+        background.blit(instructionsButtonText, instructionsButtonTextRect)
+        background.blit(highScoreButtonText, highScoreButtonTextRect)
+        # Render the text onto 'background' at the figure's coords
 
         screen.blit(background, (0, 0))
-        pygame.draw.rect(screen, (0, 0, 255), (x, y, width, height))
         pygame.display.update()
+
+        global clock
+        clock.tick(60)  # Sets the FPS
+    pygame.quit()
 
 
 def main():
-    setup()
-
+    loadMenu()
 
 main()  # Last line of code, runs main code.
