@@ -85,12 +85,23 @@ def loadMenu():
     # Play background music
     pygame.mixer_music.set_volume(0.75)
     pygame.mixer_music.play(-1)
+    musicPlaying = True
 
     global loopBool  # Set to 'True' by default
     while loopBool:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 loopBool = False
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_m:
+                    if musicPlaying:
+                        pygame.mixer_music.pause()
+                        print(pygame.mixer_music.get_pos())
+                        musicPlaying = False
+                    else:
+                        pygame.mixer_music.unpause()
+                        print(pygame.mixer_music.get_pos())
+                        musicPlaying = True
 
         # Draw menu buttons
         global green, brightGreen, white, darkWhite
@@ -126,6 +137,7 @@ def loadMenu():
 
         global clock
         clock.tick(60)  # Sets the FPS
+
     pygame.quit()
 
 
