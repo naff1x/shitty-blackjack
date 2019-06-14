@@ -30,14 +30,19 @@ clock = pygame.time.Clock()
 loopBool = True
 
 
-def createButton(surface, font, msg, x, y, w, h, inClr, acClr):
+def createButton(surface, font, msg, x, y, w, h, inClr, acClr, action=None):
     mousePos = pygame.mouse.get_pos()
     mouseClick = pygame.mouse.get_pressed()
-    if x+w > mousePos[0] > x and y+h > mousePos[1] > y:  # If button engaged...
+    if x+w > mousePos[0] > x and y+h > mousePos[1] > y:  # Button engaged...
         pygame.draw.rect(surface, acClr, (x, y, w, h))
 
-        if mouseClick[0] == 1:  # If left mouse button clicked...
-            print("! - Button clicked!")
+        if mouseClick[0] == 1 and action is not None:  # Left mouse button...
+            if action == "play game":
+                print("! - STARTING GAME")
+            elif action == "show instructions":
+                print("! - SHOW INSTRUCTIONS")
+            elif action == "show scores":
+                print("! - SHOW HIGH SCHORES")
     else:
         pygame.draw.rect(surface, inClr, (x, y, w, h))
 
@@ -99,11 +104,11 @@ def loadMenu():
         pygame.font.init()
         menuFont = pygame.font.Font("fonts/Good Brush.ttf", 40)  # Create font
         createButton(background, menuFont, "Play", 490, 310, 300, 90,
-        brightGreen, green)
+        brightGreen, green, "play game")
         createButton(background, menuFont, "Instructions", 490, 445, 300, 90,
-        white, darkWhite)
+        white, darkWhite, "show instructions")
         createButton(background, menuFont, "High Scores", 490, 580, 300, 90,
-        white, darkWhite)
+        white, darkWhite, "show scores")
 
         # Update 'background' on the main screen
         screen.blit(background, (0, 0))
