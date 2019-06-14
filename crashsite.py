@@ -30,6 +30,22 @@ clock = pygame.time.Clock()
 loopBool = True
 
 
+def createButton(surface, font, msg, x, y, w, h, inClr, acClr):
+    mousePos = pygame.mouse.get_pos()
+    if x+w > mousePos[0] > x and y+h > mousePos[1] > y:
+        pygame.draw.rect(surface, acClr, (x, y, w, h))
+    else:
+        pygame.draw.rect(surface, inClr, (x, y, w, h))
+
+    playButton = pygame.Rect(x, y, w, h)
+    playButtonText = font.render(str(msg), 1, (0, 0, 0))  # Create text
+    playButtonTextRect = playButtonText.get_rect()  # Create figure for text
+    playButtonTextRect.center = (playButton.centerx,
+    playButton.centery)  # Set coords for the figure
+
+    surface.blit(playButtonText, playButtonTextRect)
+
+
 def loadMenu():
     # Prepare background music
     pygame.mixer.init()
@@ -52,28 +68,16 @@ def loadMenu():
     # Set background
     background = pygame.image.load("images/mainMenu.jpg").convert()
 
-    # Set menu buttons
-    playButton = pygame.Rect(490, 310, 300, 90)
-    instructionsButton = pygame.Rect(490, 445, 300, 90)
-    highScoreButton = pygame.Rect(490, 580, 300, 90)
-
-    # Set text
+    # Create buttons
+    global green, brightGreen, white, darkWhite
     pygame.font.init()
-    menuFont = pygame.font.Font("fonts/Good Brush.ttf", 40)  # Create font to
-    playButtonText = menuFont.render("Play", 1, (0, 0, 0))  # Create text
-    playButtonTextRect = playButtonText.get_rect()  # Create figure for text
-    playButtonTextRect.center = (playButton.centerx,
-    playButton.centery)  # Set coords for the figure
-
-    instructionsButtonText = menuFont.render("Instructions", 1, (0, 0, 0))
-    instructionsButtonTextRect = instructionsButtonText.get_rect()
-    instructionsButtonTextRect.center = (instructionsButton.centerx,
-    instructionsButton.centery)
-
-    highScoreButtonText = menuFont.render("High Scores", 1, (0, 0, 0))
-    highScoreButtonTextRect = highScoreButtonText.get_rect()
-    highScoreButtonTextRect.center = (highScoreButton.centerx,
-    highScoreButton.centery)
+    menuFont = pygame.font.Font("fonts/Good Brush.ttf", 40)  # Create font
+    createButton(background, menuFont, "Play", 490, 310, 300, 90,
+    brightGreen, green)
+    createButton(background, menuFont, "Instructions", 490, 445, 300, 90,
+    white, darkWhite)
+    createButton(background, menuFont, "High Scores", 490, 580, 300, 90,
+    white, darkWhite)
 
     # Set cursor (optional)
     pygame.mouse.set_cursor(*pygame.cursors.broken_x)
@@ -96,42 +100,20 @@ def loadMenu():
                 if event.key == pygame.K_m:
                     if musicPlaying:
                         pygame.mixer_music.pause()
-                        print(pygame.mixer_music.get_pos())
                         musicPlaying = False
                     else:
                         pygame.mixer_music.unpause()
-                        print(pygame.mixer_music.get_pos())
                         musicPlaying = True
 
-        # Draw menu buttons
-        global green, brightGreen, white, darkWhite
-        pygame.draw.rect(background, brightGreen, playButton)
-        pygame.draw.rect(background, white, instructionsButton)
-        pygame.draw.rect(background, white, highScoreButton)
+        # Re-draw menu buttons
+        createButton(background, menuFont, "Play", 490, 310, 300, 90,
+        brightGreen, green)
+        createButton(background, menuFont, "Instructions", 490, 445, 300, 90,
+        white, darkWhite)
+        createButton(background, menuFont, "High Scores", 490, 580, 300, 90,
+        white, darkWhite)
 
-        # Set button reactions
-        mousePos = pygame.mouse.get_pos()
-        if 490+300 > mousePos[0] > 490 and 310+90 > mousePos[1] > 310:
-            background.fill(green, playButton)
-        else:
-            background.fill(brightGreen, playButton)
-
-        if 490+300 > mousePos[0] > 490 and 445+90 > mousePos[1] > 445:
-            background.fill(darkWhite, instructionsButton)
-        else:
-            background.fill(white, instructionsButton)
-
-        if 490+300 > mousePos[0] > 490 and 580+90 > mousePos[1] > 580:
-            background.fill(darkWhite, highScoreButton)
-        else:
-            background.fill(white, highScoreButton)
-
-        # Render texts onto 'background' so they cover the colored boxes
-        background.blit(playButtonText, playButtonTextRect)
-        background.blit(instructionsButtonText, instructionsButtonTextRect)
-        background.blit(highScoreButtonText, highScoreButtonTextRect)
-        # Render the text onto 'background' at the figure's coords
-
+        # Update 'background' on the main screen
         screen.blit(background, (0, 0))
         pygame.display.update()
 
