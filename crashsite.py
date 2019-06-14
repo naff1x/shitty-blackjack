@@ -32,8 +32,12 @@ loopBool = True
 
 def createButton(surface, font, msg, x, y, w, h, inClr, acClr):
     mousePos = pygame.mouse.get_pos()
-    if x+w > mousePos[0] > x and y+h > mousePos[1] > y:
+    mouseClick = pygame.mouse.get_pressed()
+    if x+w > mousePos[0] > x and y+h > mousePos[1] > y:  # If button engaged...
         pygame.draw.rect(surface, acClr, (x, y, w, h))
+
+        if mouseClick[0] == 1:  # If left mouse button clicked...
+            print("! - Button clicked!")
     else:
         pygame.draw.rect(surface, inClr, (x, y, w, h))
 
@@ -68,23 +72,8 @@ def loadMenu():
     # Set background
     background = pygame.image.load("images/mainMenu.jpg").convert()
 
-    # Create buttons
-    global green, brightGreen, white, darkWhite
-    pygame.font.init()
-    menuFont = pygame.font.Font("fonts/Good Brush.ttf", 40)  # Create font
-    createButton(background, menuFont, "Play", 490, 310, 300, 90,
-    brightGreen, green)
-    createButton(background, menuFont, "Instructions", 490, 445, 300, 90,
-    white, darkWhite)
-    createButton(background, menuFont, "High Scores", 490, 580, 300, 90,
-    white, darkWhite)
-
     # Set cursor (optional)
     pygame.mouse.set_cursor(*pygame.cursors.broken_x)
-
-    # Initial blit to screen (render)
-    screen.blit(background, (0, 0))
-    pygame.display.flip()
 
     # Play background music
     pygame.mixer_music.set_volume(0.75)
@@ -105,7 +94,10 @@ def loadMenu():
                         pygame.mixer_music.unpause()
                         musicPlaying = True
 
-        # Re-draw menu buttons
+        # Draw buttons
+        global green, brightGreen, white, darkWhite
+        pygame.font.init()
+        menuFont = pygame.font.Font("fonts/Good Brush.ttf", 40)  # Create font
         createButton(background, menuFont, "Play", 490, 310, 300, 90,
         brightGreen, green)
         createButton(background, menuFont, "Instructions", 490, 445, 300, 90,
