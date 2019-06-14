@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
+import sys
+import os
 try:
-    import sys
-    import os
     import pygame
     print("* Using PyGame version", pygame.__version__.__str__(), "*")
 except ImportError():
@@ -13,8 +13,6 @@ except ImportError():
     if sys.platform == "win32":  # If the user's OS = Windows...
         os.system('pip install --user pygame')
         print("* Finished library install *")
-    import sys
-    import os
     import pygame
     print("* Using PyGame version", pygame.__version__.__str__(), "*")
 
@@ -30,7 +28,8 @@ clock = pygame.time.Clock()
 loopBool = True
 
 
-def createButton(surface, font, msg, x, y, w, h, inClr, acClr, action=None):
+def createButton(win, surface, f, msg, x, y, w, h, inClr, acClr, action=None):
+    global loopBool
     mousePos = pygame.mouse.get_pos()
     mouseClick = pygame.mouse.get_pressed()
     if x+w > mousePos[0] > x and y+h > mousePos[1] > y:  # Button engaged...
@@ -39,15 +38,19 @@ def createButton(surface, font, msg, x, y, w, h, inClr, acClr, action=None):
         if mouseClick[0] == 1 and action is not None:  # Left mouse button...
             if action == "play game":
                 print("! - STARTING GAME")
+                loopBool = False
+                startGame(win)
             elif action == "show instructions":
                 print("! - SHOW INSTRUCTIONS")
+                # loopBool = False
             elif action == "show scores":
                 print("! - SHOW HIGH SCHORES")
+                # loopBool = False
     else:
         pygame.draw.rect(surface, inClr, (x, y, w, h))
 
     playButton = pygame.Rect(x, y, w, h)
-    playButtonText = font.render(str(msg), 1, (0, 0, 0))  # Create text
+    playButtonText = f.render(str(msg), 1, (0, 0, 0))  # Create text
     playButtonTextRect = playButtonText.get_rect()  # Create figure for text
     playButtonTextRect.center = (playButton.centerx,
     playButton.centery)  # Set coords for the figure
@@ -75,7 +78,7 @@ def loadMenu():
     pygame.display.set_caption('Shitty Blackjack')
 
     # Set background
-    background = pygame.image.load("images/mainMenu.jpg").convert()
+    menuBackground = pygame.image.load("images/mainMenu.jpg").convert()
 
     # Set cursor (optional)
     pygame.mouse.set_cursor(*pygame.cursors.broken_x)
@@ -103,24 +106,39 @@ def loadMenu():
         global green, brightGreen, white, darkWhite
         pygame.font.init()
         menuFont = pygame.font.Font("fonts/Good Brush.ttf", 40)  # Create font
-        createButton(background, menuFont, "Play", 490, 310, 300, 90,
-        brightGreen, green, "play game")
-        createButton(background, menuFont, "Instructions", 490, 445, 300, 90,
-        white, darkWhite, "show instructions")
-        createButton(background, menuFont, "High Scores", 490, 580, 300, 90,
-        white, darkWhite, "show scores")
+        createButton(screen, menuBackground, menuFont, "Play", 490, 310, 300,
+        90, brightGreen, green, "play game")
+        createButton(screen, menuBackground, menuFont, "Instructions", 490,
+        445, 300, 90, white, darkWhite, "show instructions")
+        createButton(screen, menuBackground, menuFont, "High Scores", 490, 580,
+        300, 90, white, darkWhite, "show scores")
 
-        # Update 'background' on the main screen
-        screen.blit(background, (0, 0))
+        # Update 'menuBackground' on the main screen
+        screen.blit(menuBackground, (0, 0))
         pygame.display.update()
 
         global clock
         clock.tick(60)  # Sets the FPS
 
-    pygame.quit()
+
+def startGame(window):
+    gameBackground = pygame.Surface(window.get_size())
+    gameBackground = gameBackground.convert()
+    gameBackground.fill((255, 0, 0))
+
+    window.blit(gameBackground, (0, 0))
+    pygame.display.flip()
+
+    while 1:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                return
 
 
 def main():
     loadMenu()
 
-main()  # Last line of code, runs main code.
+if __name__ == '__main__':
+    main()
+
+main()
