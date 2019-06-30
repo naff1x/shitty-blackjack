@@ -5,12 +5,12 @@ try:
     import pygame
     print("* Using PyGame version", pygame.__version__.__str__(), "*")
 except ImportError():
-    if sys.platform == "darwin":  # If the user's OS = MacOS...
+    if sys.platform == "darwin":  # If the user's OS is MacOS...
         # Installs files necessary for the 'PyGame' library.
         os.system('pip3 install --user pygame')
         print("* Finished library install *")
 
-    if sys.platform == "win32":  # If the user's OS = Windows...
+    if sys.platform == "win32":  # If the user's OS is Windows...
         os.system('pip install --user pygame')
         print("* Finished library install *")
     import pygame
@@ -27,6 +27,10 @@ darkWhite = (200, 200, 200)
 clock = pygame.time.Clock()
 loopBool = True
 
+# Fonts
+pygame.font.init()
+comicSans = pygame.font.Font("fonts/Comic Sans MS.ttf", 40)
+goodBrush = pygame.font.Font("fonts/Good Brush.ttf", 40)
 
 def createButton(win, surface, f, msg, x, y, w, h, inClr, acClr, action=None):
     global loopBool
@@ -36,16 +40,20 @@ def createButton(win, surface, f, msg, x, y, w, h, inClr, acClr, action=None):
         pygame.draw.rect(surface, acClr, (x, y, w, h))
 
         if mouseClick[0] == 1 and action is not None:  # Left mouse button...
-            if action == "play game":
+            if action == "actionGame":
                 print("! - STARTING GAME")
                 loopBool = False
                 startGame(win)
-            elif action == "show instructions":
+            elif action == "actionInstructions":
                 print("! - SHOW INSTRUCTIONS")
                 # loopBool = False
-            elif action == "show scores":
+            elif action == "actionScores":
                 print("! - SHOW HIGH SCHORES")
                 # loopBool = False
+            elif action == "actionHit":
+                print("! - PLAYER HAS HIT")
+            else:
+                print("! - BUTTON HAS NO SET ACTION")
     else:
         pygame.draw.rect(surface, inClr, (x, y, w, h))
 
@@ -103,15 +111,13 @@ def loadMenu():
                         musicPlaying = True
 
         # Draw buttons
-        global green, brightGreen, white, darkWhite
-        pygame.font.init()
-        menuFont = pygame.font.Font("fonts/Good Brush.ttf", 40)  # Create font
-        createButton(screen, menuBackground, menuFont, "Play", 490, 310, 300,
-        90, brightGreen, green, "play game")
-        createButton(screen, menuBackground, menuFont, "Instructions", 490,
-        445, 300, 90, white, darkWhite, "show instructions")
-        createButton(screen, menuBackground, menuFont, "High Scores", 490, 580,
-        300, 90, white, darkWhite, "show scores")
+        global green, brightGreen, white, darkWhite, comicSans, goodBrush
+        createButton(screen, menuBackground, comicSans, "Play", 490, 310, 300,
+        90, brightGreen, green, "actionGame")
+        createButton(screen, menuBackground, comicSans, "Instructions", 490,
+        445, 300, 90, white, darkWhite, "actionInstructions")
+        createButton(screen, menuBackground, comicSans, "High Scores", 490, 580,
+        300, 90, white, darkWhite, "actionScores")
 
         # Update 'menuBackground' on the main screen
         screen.blit(menuBackground, (0, 0))
@@ -122,9 +128,12 @@ def loadMenu():
 
 
 def startGame(window):
+    gameBackground = pygame.image.load("images/blackjack-table.jpg").convert()
+    """
     gameBackground = pygame.Surface(window.get_size())
     gameBackground = gameBackground.convert()
     gameBackground.fill((255, 0, 0))
+    """
 
     window.blit(gameBackground, (0, 0))
     pygame.display.flip()
@@ -134,6 +143,16 @@ def startGame(window):
             if event.type == pygame.QUIT:
                 return
 
+        global comicSans, goodBrush, brightGreen, green
+        createButton(window, gameBackground, comicSans, "hit", 240, 360, 160, 80,
+        brightGreen, green, "actionHit")
+
+        # Update 'gameBackground' on the main screen
+        window.blit(gameBackground, (0, 0))
+        pygame.display.update()
+
+        global clock
+        clock.tick(60)  # Sets the FPS
 
 def main():
     loadMenu()
