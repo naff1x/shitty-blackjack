@@ -2,6 +2,7 @@
 import sys
 import os
 try:
+    import pygame_textinput
     import pygame
     print("* Using PyGame version", pygame.__version__.__str__(), "*")
 except ImportError():
@@ -13,7 +14,9 @@ except ImportError():
     if sys.platform == "win32":  # If the user's OS is Windows...
         os.system('pip install --user pygame')
         print("* Finished library install *")
+    import pygame_textinput
     import pygame
+
     print("* Using PyGame version", pygame.__version__.__str__(), "*")
 
 # Colors
@@ -36,6 +39,7 @@ musicPlaying = True
 pygame.font.init()
 comicSans = pygame.font.Font("fonts/Comic Sans MS.ttf", 40)
 goodBrush = pygame.font.Font("fonts/Good Brush.ttf", 40)
+
 
 def createButton(win, surface, f, msg, x, y, w, h, inClr, acClr, action=None):
     global menuActive
@@ -74,6 +78,7 @@ def createButton(win, surface, f, msg, x, y, w, h, inClr, acClr, action=None):
 
 
 def loadMenu():
+    pygame.init()  # This line causes an APIS warning on MacOS. Check "Issues"
     # Prepare background music
     pygame.mixer.init()
     bgmusic = ["audio/Sing_Swing_Bada_Bing.mp3",
@@ -88,7 +93,6 @@ def loadMenu():
     a scratching noise when a song is loaded and played. """
 
     # Create screen
-    pygame.init()  # This line causes an APIS warning on MacOS. Check "Issues"
     screen = pygame.display.set_mode((1280, 800))
     pygame.display.set_caption('Shitty Blackjack')
 
@@ -122,8 +126,8 @@ def loadMenu():
         90, brightGreen, green, "actionGame")
         createButton(screen, menuBackground, comicSans, "Instructions", 490,
         445, 300, 90, white, darkWhite, "actionInstructions")
-        createButton(screen, menuBackground, comicSans, "High Scores", 490, 580,
-        300, 90, white, darkWhite, "actionScores")
+        createButton(screen, menuBackground, comicSans, "High Scores", 490,
+        580, 300, 90, white, darkWhite, "actionScores")
 
         # Update 'menuBackground' on the main screen
         screen.blit(menuBackground, (0, 0))
@@ -135,11 +139,13 @@ def loadMenu():
 
 def startGame(window):
     gameBackground = pygame.image.load("images/blackjack-table.jpg").convert()
+    betInput = pygame_textinput.TextInput("Enter bet here")
     window.blit(gameBackground, (0, 0))
     pygame.display.flip()
     global gameActive, musicPlaying  # Set to 'True' by default
     while gameActive:
-        for event in pygame.event.get():
+        events = pygame.event.get()
+        for event in events:
             if event.type == pygame.QUIT:
                 gameActive = False
             if event.type == pygame.KEYUP:
@@ -152,17 +158,22 @@ def startGame(window):
                         musicPlaying = True
 
         global comicSans, goodBrush, brightGreen, green, red, darkRed
-        createButton(window, gameBackground, comicSans, "hit", 240, 360, 160,
-        80, brightGreen, green, "actionHit")
-        createButton(window, gameBackground, comicSans, "stand", 880, 360, 160,
-        80, red, darkRed, "actionStand")
+        createButton(window, gameBackground, comicSans, "hit", 240, 360, 140,
+        60, brightGreen, green, "actionHit")
+        createButton(window, gameBackground, comicSans, "stand", 900, 360, 140,
+        60, red, darkRed, "actionStand")
 
         # Update 'gameBackground' on the main screen
         window.blit(gameBackground, (0, 0))
+        # betInput.update(events)
+        if betInput.update(events):
+            print(betInput.get_text())
+        window.blit(betInput.get_surface(), (650, 775))
         pygame.display.update()
 
         global clock
         clock.tick(60)  # Sets the FPS
+
 
 def main():
     loadMenu()
