@@ -5,8 +5,18 @@ Borrowed from https://github.com/Nearoo/pygame-text-input under the MIT license.
 """
 
 import os.path
+try:
+    import pygame
+    print("* Using PyGame version", pygame.__version__.__str__(), "*")
+except ImportError():
+    if sys.platform == "darwin":  # If the user's OS is MacOS...
+        # Installs files necessary for the 'PyGame' library.
+        os.system('pip3 install --user pygame')
+        print("* Finished library install *")
 
-import pygame
+    if sys.platform == "win32":  # If the user's OS is Windows...
+        os.system('pip install --user pygame')
+
 import pygame.locals as pl
 
 pygame.font.init()
