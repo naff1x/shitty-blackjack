@@ -3,7 +3,7 @@ Copyright 2017, Silas Gyger, silasgyger@gmail.com, All rights reserved.
 
 Borrowed from https://github.com/Nearoo/pygame-text-input under the MIT license.
 """
-
+import sys
 import os.path
 try:
     import pygame
