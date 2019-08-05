@@ -2,8 +2,9 @@
 import sys
 import os
 try:
-    import pygame_textinput
     import pygame
+    import pygame_textinput
+
     print("* Using PyGame version", pygame.__version__.__str__(), "*")
 except ImportError:
     if sys.platform == "darwin":  # If the user's OS is MacOS...
@@ -14,8 +15,8 @@ except ImportError:
     if sys.platform == "win32":  # If the user's OS is Windows...
         os.system('pip install --user pygame')
         print("* Finished library install *")
-    import pygame_textinput
     import pygame
+    import pygame_textinput
 
     print("* Using PyGame version", pygame.__version__.__str__(), "*")
 
@@ -57,7 +58,7 @@ def createButton(win, surface, f, msg, x, y, w, h, inClr, acClr, action=None):
                 print("! - SHOW INSTRUCTIONS")
                 # menuActive = False
             elif action == "actionScores":
-                print("! - SHOW HIGH SCHORES")
+                print("! - SHOW HIGH SCORES")
                 # menuActive = False
             elif action == "actionHit":
                 print("! - PLAYER HAS HIT")
