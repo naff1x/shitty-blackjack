@@ -8,7 +8,7 @@ import os.path
 try:
     import pygame
     print("* Using PyGame version", pygame.__version__.__str__(), "*")
-except ImportError():
+except ImportError:
     if sys.platform == "darwin":  # If the user's OS is MacOS...
         # Installs files necessary for the 'PyGame' library.
         os.system('pip3 install --user pygame')
