@@ -36,7 +36,7 @@ class Hand:
       return s
 
 
-c = Card(1,1)
+c = Card(1,"spades")
 print(c)
 print(c.getValue())
 h = Hand()

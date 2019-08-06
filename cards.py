@@ -39,3 +39,6 @@ class Card:
 
     def __repr__(self):
         return "Card rank: " + str(self.rank) + " // Card suit: " + self.suit
+
+    def getValue(self):
+        return self.rank
