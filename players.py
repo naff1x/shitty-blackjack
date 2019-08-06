@@ -10,6 +10,12 @@ class Player:
         self.money = 1000;
         # insats
 
+    def hit(self, card):
+        self.hand.addCard(card)
+
+    def getValue(self):
+        return self.hand.getValue()
+
 class Hand:
     def __init__(self):
         self.cards = []
@@ -17,7 +23,7 @@ class Hand:
     def addCard(self, card):
         self.cards.append(card)
 
-    def value(self):
+    def getValue(self):
         sum = 0;
         for c in self.cards:
             sum += c.getValue()
@@ -35,5 +41,13 @@ print(c)
 print(c.getValue())
 h = Hand()
 h.addCard(c)
-print(h.value())
+print(h.getValue())
+
+p = Player()
+p.hit(c)
+print(p.getValue())
+p.hit(c)
+print(p.getValue())
+
+
 
