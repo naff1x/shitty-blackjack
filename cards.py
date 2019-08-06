@@ -1,21 +1,35 @@
 # -*- coding: utf-8 -*-
 
 class Deck:
-    def __init__(self):
-        newDeck = 52*[None]
+    import random
 
+
+    def __init__(self):
+        self.newDeck = 52*[None]
 
         position = 0
-
         for rank in range (13):
             for suit in range(4):
-                newDeck[position] = Card(rank+2, suit)
+                self.newDeck[position] = Card(rank+2, suit)
                 position += 1
 
-        #for i in range(len(newDeck)):
-            #print(str(newDeck[i].rank) + " " + str(newDeck[i].suit))
+
+    def getDeck(self):
+        return self.newDeck
+
+
+    def shuffleDeck(self):
+        self.random.shuffle(self.newDeck)
+        print("Deck shuffled!")
+
+
+    def printDeck(self):
+        for i in range(len(self.newDeck)):
+            print("Position: " + str(i) + " // Rank: " + str(self.newDeck[i].rank) + " // Suit: " + str(self.newDeck[i].suit))
 
 class Card:
+
+
     def __init__(self, inRank, inSuit):
         # "rank" meaning number or face and "suit" meaning clubs, diamonds etc.
         self.rank = inRank
@@ -36,9 +50,6 @@ class Card:
         elif inSuit == 3:
             self.suit = "spades"
 
-        #print("Rank: "+ str(self.rank) + " Value: " + str(self.value) + " Suit: " + self.suit)
 
-    def getValue(self, card):
+    def getValue(self):
         return self.value
-
-Deck()
