@@ -1,3 +1,5 @@
+from cards import *
+
 class Bank:
     def __init__(self):
         self.hand = Hand()
@@ -6,7 +8,7 @@ class Player:
     def __init__(self):
         self.hand = Hand()
         self.money = 1000;
-        // insats
+        # insats
 
 class Hand:
     def __init__(self):
@@ -18,7 +20,7 @@ class Hand:
     def value(self):
         sum = 0;
         for c in self.cards:
-            sum += c.value()
+            sum += c.getValue()
         return sum
 
     def __repr__(self):
@@ -28,4 +30,10 @@ class Hand:
       return s
 
 
+c = Card(1,1)
+print(c)
+print(c.getValue())
+h = Hand()
+h.addCard(c)
+print(h.value())
 
