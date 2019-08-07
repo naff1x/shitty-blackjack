@@ -2,7 +2,7 @@ import pygame
 
 
 class Button:
-    def __init__(self, win, surface, f, msg, x, y, w, h, inClr, acClr):
+    def __init__(self, surface, f, msg, x, y, w, h, inClr, acClr):
         """
         'win' --> window object
         'surface' --> surface within window to draw on
