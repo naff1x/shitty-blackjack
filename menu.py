@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 import sys
 import os
+import button_template
+from shitty_colors import *
+
 try:
     import pygame
     import pygame_textinput
@@ -53,6 +56,10 @@ class Menu:
         pygame.mixer_music.set_volume(0.75)
         pygame.mixer_music.play(-1)
 
+        # Fonts
+        pygame.font.init()
+        comic_sans = pygame.font.Font("fonts/Comic Sans MS.ttf", 40)
+
         menu_active = True
         music_playing = True
 
@@ -68,6 +75,9 @@ class Menu:
                         else:
                             pygame.mixer_music.unpause()
                             music_playing = True
+
+            button_template.Button(menu_background, comic_sans, "Play", 490, 310, 300, 90,
+            Colors.bright_green, Colors.green)
 
             # Update 'menuBackground' on the main screen
             screen.blit(menu_background, (0, 0))
