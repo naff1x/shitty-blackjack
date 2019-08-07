@@ -3,6 +3,7 @@ import sys
 import os
 import button_template
 from shitty_colors import *
+import game
 
 try:
     import pygame
@@ -60,6 +61,10 @@ class Menu:
         pygame.font.init()
         comic_sans = pygame.font.Font("fonts/Comic Sans MS.ttf", 40)
 
+        # Add buttons (not rendered yet)
+        play_button = button_template.Button(menu_background, comic_sans, "Play", 490, 310, 300, 90,
+                               Colors.bright_green, Colors.green)
+
         menu_active = True
         music_playing = True
 
@@ -75,9 +80,19 @@ class Menu:
                         else:
                             pygame.mixer_music.unpause()
                             music_playing = True
+                if pygame.mouse.get_pressed()[0] and play_button.button.collidepoint(pygame.mouse.get_pos()):
+                    menu_active = False
+                    print("GAME STARTING")
+                    game.Game(screen, music_playing)
 
             button_template.Button(menu_background, comic_sans, "Play", 490, 310, 300, 90,
-            Colors.bright_green, Colors.green)
+                                   Colors.bright_green, Colors.green)
+            """
+            button_template.Button(menu_background, comic_sans, "Instructions", 490, 445, 300, 90,
+                                   Colors.white, Colors.dark_white)
+            button_template.Button(menu_background, comic_sans, "High Scores", 490, 580, 300, 90,
+                                   Colors.white, Colors.dark_white)
+            """
 
             # Update 'menuBackground' on the main screen
             screen.blit(menu_background, (0, 0))
