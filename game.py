@@ -5,9 +5,7 @@ import pygame_textinput
 class Game:
     def __init__(self, window, music_status):
         game_background = pygame.image.load("images/blackjack-table.jpg").convert()
-        bet_input = pygame_textinput.TextInput("Enter bet here")
-        window.blit(game_background, (0, 0))
-        pygame.display.flip()
+        # bet_input = pygame_textinput.TextInput("Enter bet here") # This line adds ~4s to the loading time
 
         clock = pygame.time.Clock()
         game_active = True
@@ -27,12 +25,13 @@ class Game:
                             pygame.mixer_music.unpause()
                             music_playing = True
 
-                    # Update 'gameBackground' on the main screen
-                    window.blit(game_background, (0, 0))
+            # Update 'gameBackground' on the main screen
+            window.blit(game_background, (0, 0))
 
-                    if bet_input.update(events):
-                        print(bet_input.get_text())
+            """if bet_input.update(events):
+                print(bet_input.get_text())
 
-                    window.blit(bet_input.get_surface(), (650, 775))
-                    pygame.display.update()
-                    clock.tick(60)  # Sets the FPS
+            window.blit(bet_input.get_surface(), (650, 775))"""
+
+            pygame.display.update()
+            clock.tick(60)  # Sets the FPS
