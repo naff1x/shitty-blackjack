@@ -62,8 +62,16 @@ class Menu:
         comic_sans = pygame.font.Font("fonts/Comic Sans MS.ttf", 40)
 
         # Add buttons (not rendered yet)
+        buttons = []
         play_button = button_template.Button(menu_background, comic_sans, "Play", 490, 310, 300, 90,
                                Colors.bright_green, Colors.green)
+        instructions_button = button_template.Button(menu_background, comic_sans, "Instructions", 490, 445, 300, 90,
+                               Colors.white, Colors.dark_white)
+        scores_button = button_template.Button(menu_background, comic_sans, "High Scores", 490, 580, 300, 90,
+                               Colors.white, Colors.dark_white)
+        buttons.append(play_button)
+        buttons.append(instructions_button)
+        buttons.append(scores_button)
 
         menu_active = True
         music_playing = True
@@ -84,15 +92,9 @@ class Menu:
                     menu_active = False
                     print("GAME STARTING")
                     game.Game(screen, music_playing)
-
-            button_template.Button(menu_background, comic_sans, "Play", 490, 310, 300, 90,
-                                   Colors.bright_green, Colors.green)
-            """
-            button_template.Button(menu_background, comic_sans, "Instructions", 490, 445, 300, 90,
-                                   Colors.white, Colors.dark_white)
-            button_template.Button(menu_background, comic_sans, "High Scores", 490, 580, 300, 90,
-                                   Colors.white, Colors.dark_white)
-            """
+                if event.type == pygame.MOUSEMOTION:  # When the mouse moves, check for engagement in each button
+                    for i in range(len(buttons)):
+                        buttons[i].engage_button()
 
             # Update 'menuBackground' on the main screen
             screen.blit(menu_background, (0, 0))
