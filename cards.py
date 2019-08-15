@@ -1,44 +1,46 @@
 # -*- coding: utf-8 -*-
+import pygame
 
 class Deck:
     import random
 
-
     def __init__(self):
-        self.newDeck = 52*[None]
+        self.deck = 52 * [None]
 
         position = 0
         suits = ["hearts", "spades", "diamonds", "clubs"]
         for rank in range (13):
             for suit in suits:
-                self.newDeck[position] = Card(rank+2, suit)
+                self.deck[position] = Card(rank + 2, suit)
                 position += 1
 
-
     def getDeck(self):
-        return self.newDeck
-
+        return self.deck
 
     def shuffleDeck(self):
-        self.random.shuffle(self.newDeck)
+        self.random.shuffle(self.deck)
         print("Deck shuffled!")
 
-
     def printDeck(self):
-        for i in range(len(self.newDeck)):
-            print("Position: " + str(i) + " // Rank: " + str(self.newDeck[i].rank) + " // Suit: " + str(self.newDeck[i].suit))
+        for i in range(len(self.deck)):
+            print("Position: " + str(i) + " // Rank: " + str(self.deck[i].rank) + " // Suit: " + str(self.deck[i].suit))
+
 
 class Card:
-
 
     def __init__(self, inRank, inSuit):
         # "rank" meaning number or face and "suit" meaning clubs, diamonds etc.
         self.rank = inRank
         self.suit = inSuit
-
+        self.image_path = "images/cards/"+str(inRank)+"_"+inSuit+".png"
+        self.visual = pygame.image.load(self.image_path).convert()
 
     def __repr__(self):
         return "Card rank: " + str(self.rank) + " // Card suit: " + self.suit
 
-    def getValue(self):
+    def get_value(self):
         return self.rank
+
+    def get_visual(self):
+        return self.visual
+
