@@ -4,6 +4,12 @@ class Bank:
     def __init__(self):
         self.hand = Hand()
 
+    def hit(self, card):
+        self.hand.addCard(card)
+
+    def getValue(self):
+        return self.hand.getValue()
+
 class Player:
     def __init__(self):
         self.hand = Hand()
