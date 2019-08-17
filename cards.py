@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import pygame
 
+
 class Deck:
     import random
 
@@ -20,6 +21,11 @@ class Deck:
     def shuffleDeck(self):
         self.random.shuffle(self.deck)
         print("Deck shuffled!")
+
+    def getTopCard(self):
+        item = self.deck[-1]
+        self.deck.pop()  # "pop() removed last item in the list by default
+        return item
 
     def printDeck(self):
         for i in range(len(self.deck)):
@@ -43,4 +49,3 @@ class Card:
 
     def get_visual(self):
         return self.visual
-
