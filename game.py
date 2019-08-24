@@ -1,5 +1,4 @@
 import pygame
-from cards import *
 from players import *
 # import pygame_textinput
 import button_template
@@ -7,6 +6,16 @@ from shitty_colors import *
 
 
 class Game:
+    def update_pts(self):
+        user_pts = button_template.Button(self.game_background, self.comic_sans, str(self.user.hand.getValue()),
+                                          200, 500, 100, 100, Colors.white, Colors.white)
+        house_pts = button_template.Button(self.game_background, self.comic_sans, str(self.house.hand.getValue()),
+                                          200, 200, 100, 100, Colors.white, Colors.white)
+        if self.user.hand.getValue() > 21:  # Player has lost
+            print("PLAYER HAS LOST")
+        else:
+            pass
+
 
     def blit_card(self, card, isPlayer):
         if isPlayer:  # If the given card is the player's card...
@@ -25,12 +34,11 @@ class Game:
             self.house.hit(card)
             self.blit_card(card, False)
 
-    def __init__(self, window, music_status):
+    def __init__(self, win, music_status):
+        self.window = win
         self.game_background = pygame.image.load("images/blackjack-table.jpg").convert()
-        self.card_surface = pygame.Surface((1280, 800))
         self.user_cards_xpos = 500
         self.house_cards_xpos = 500
-        self.card_surface.set_alpha(0)
 
         # bet_input = pygame_textinput.TextInput("Enter bet here") # This line adds ~4s to the loading time
 
@@ -47,17 +55,16 @@ class Game:
         self.initial_draw()
 
         # Add font
-        comic_sans = pygame.font.Font("fonts/Comic Sans MS.ttf", 40)
+        self.comic_sans = pygame.font.Font("fonts/Comic Sans MS.ttf", 40)
 
         # Add buttons
         self.buttons = []
-        self.hit_button = button_template.Button(self.game_background, comic_sans, "hit", 200, 355, 150, 90,
+        self.hit_button = button_template.Button(self.game_background, self.comic_sans, "hit", 200, 355, 150, 90,
                                             Colors.bright_green, Colors.green)
 
         self.buttons.append(self.hit_button)
 
-
-        # game_background.blit(self.user.hand.cards[0].getVisual(), (545, 450))
+        self.update_pts()
 
         clock = pygame.time.Clock()
         game_active = True
@@ -81,12 +88,14 @@ class Game:
                     card = self.deck.getTopCard()
                     self.user.hit(card)
                     self.blit_card(card, True)
+                    self.update_pts()
+
                 if event.type == pygame.MOUSEMOTION:  # When the mouse moves, check for engagement in each button
                     for i in range(len(self.buttons)):
                         self.buttons[i].engage_button()
 
             # Update 'gameBackground' on the main screen
-            window.blit(self.game_background, (0, 0))
+            self.window.blit(self.game_background, (0, 0))
 
             """if bet_input.update(events):
                 print(bet_input.get_text())
