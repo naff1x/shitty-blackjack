@@ -42,7 +42,7 @@ class Hand:
       return s
 
 
-c = Card(1,"spades")
+"""c = Card(1,"spades")
 print(c)
 print(c.getValue())
 h = Hand()
@@ -53,7 +53,7 @@ p = Player()
 p.hit(c)
 print(p.getValue())
 p.hit(c)
-print(p.getValue())
+print(p.getValue())"""
 
 
 
