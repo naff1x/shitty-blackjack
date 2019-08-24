@@ -39,13 +39,13 @@ class Card:
         self.rank = inRank
         self.suit = inSuit
         self.image_path = "images/cards/"+str(inRank)+"_"+inSuit+".png"
-        self.visual = pygame.image.load(self.image_path).convert()
+        self.visual = pygame.transform.scale(pygame.image.load(self.image_path).convert(), (130, 180))
 
     def __repr__(self):
         return "Card rank: " + str(self.rank) + " // Card suit: " + self.suit
 
-    def get_value(self):
+    def getValue(self):
         return self.rank
 
-    def get_visual(self):
+    def getVisual(self):
         return self.visual
