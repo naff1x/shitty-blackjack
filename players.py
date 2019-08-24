@@ -30,7 +30,7 @@ class Hand:
         self.cards.append(card)
 
     def getValue(self):
-        sum = 0;
+        sum = 0
         for c in self.cards:
             sum += c.getValue()
         return sum
