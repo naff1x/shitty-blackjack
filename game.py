@@ -6,23 +6,32 @@ from shitty_colors import *
 
 
 class Game:
+
     def update_pts(self):
-        user_pts = button_template.Button(self.game_background, self.comic_sans, str(self.user.hand.getValue()),
+        user_pts = button_template.Button(self.playground, self.comic_sans, str(self.user.hand.getValue()),
                                           200, 500, 100, 100, Colors.white, Colors.white)
-        house_pts = button_template.Button(self.game_background, self.comic_sans, str(self.house.hand.getValue()),
+        house_pts = button_template.Button(self.playground, self.comic_sans, str(self.house.hand.getValue()),
                                           200, 200, 100, 100, Colors.white, Colors.white)
         if self.user.hand.getValue() > 21:  # Player has lost
             print("PLAYER HAS LOST")
+            drawing_area = pygame.Rect(351, 0, 929, 800)
+            self.playground.fill((0,0,0,0), drawing_area)
+            self.user_cards_xpos = 500
+            self.house_cards_xpos = 500
+            self.user.hand.clearHand()
+            self.house.hand.clearHand()
+            self.initial_draw()
+            self.update_pts()
         else:
             pass
 
 
     def blit_card(self, card, isPlayer):
         if isPlayer:  # If the given card is the player's card...
-            self.game_background.blit(card.getVisual(), (self.user_cards_xpos, 450))
+            self.playground.blit(card.getVisual(), (self.user_cards_xpos, 450))
             self.user_cards_xpos += 40
         else:  # Given card belongs to the house...
-            self.game_background.blit(card.getVisual(), (self.house_cards_xpos, 100))
+            self.playground.blit(card.getVisual(), (self.house_cards_xpos, 100))
             self.house_cards_xpos += 40
 
     def initial_draw(self):
@@ -34,11 +43,11 @@ class Game:
             self.house.hit(card)
             self.blit_card(card, False)
 
-    def __init__(self, win, music_status):
-        self.window = win
-        self.game_background = pygame.image.load("images/blackjack-table.jpg").convert()
+    def set_vars(self):
         self.user_cards_xpos = 500
         self.house_cards_xpos = 500
+        self.playground = pygame.Surface((1280, 800), pygame.SRCALPHA)
+        self.game_background.blit(self.playground, (0, 0))
 
         # bet_input = pygame_textinput.TextInput("Enter bet here") # This line adds ~4s to the loading time
 
@@ -59,11 +68,15 @@ class Game:
 
         # Add buttons
         self.buttons = []
-        self.hit_button = button_template.Button(self.game_background, self.comic_sans, "hit", 200, 355, 150, 90,
-                                            Colors.bright_green, Colors.green)
+        self.hit_button = button_template.Button(self.playground, self.comic_sans, "hit", 200, 355, 150, 90,
+                                                 Colors.bright_green, Colors.green)
 
         self.buttons.append(self.hit_button)
 
+    def __init__(self, win, music_status):
+        self.window = win
+        self.game_background = pygame.image.load("images/blackjack-table.jpg").convert()
+        self.set_vars()
         self.update_pts()
 
         clock = pygame.time.Clock()
@@ -85,10 +98,19 @@ class Game:
                             music_playing = True
                 if pygame.mouse.get_pressed()[0] and self.hit_button.button.collidepoint(pygame.mouse.get_pos()):
                     print("HIT")
-                    card = self.deck.getTopCard()
-                    self.user.hit(card)
-                    self.blit_card(card, True)
-                    self.update_pts()
+                    try:
+                        card = self.deck.getTopCard()
+                        self.user.hit(card)
+                        self.blit_card(card, True)
+                        self.update_pts()
+                    except IndexError:
+                        print("ADDING NEW DECK")
+                        self.deck = Deck()
+                        self.deck.shuffleDeck()
+                        card = self.deck.getTopCard()
+                        self.user.hit(card)
+                        self.blit_card(card, True)
+                        self.update_pts()
 
                 if event.type == pygame.MOUSEMOTION:  # When the mouse moves, check for engagement in each button
                     for i in range(len(self.buttons)):
@@ -96,6 +118,7 @@ class Game:
 
             # Update 'gameBackground' on the main screen
             self.window.blit(self.game_background, (0, 0))
+            self.window.blit(self.playground, (0, 0))
 
             """if bet_input.update(events):
                 print(bet_input.get_text())
