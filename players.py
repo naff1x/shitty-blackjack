@@ -41,6 +41,9 @@ class Hand:
          s += c.print() +", "
       return s
 
+    def clearHand(self):
+        self.cards.clear()
+
 
 """c = Card(1,"spades")
 print(c)
