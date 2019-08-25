@@ -38,14 +38,18 @@ class Card:
         # "rank" meaning number or face and "suit" meaning clubs, diamonds etc.
         self.rank = inRank
         self.suit = inSuit
+        self.value = inRank
         self.image_path = "images/cards/"+str(inRank)+"_"+inSuit+".png"
-        self.visual = pygame.transform.scale(pygame.image.load(self.image_path).convert(), (130, 180))
+        self.visual = pygame.transform.scale(pygame.image.load(self.image_path).convert(), (145, 200))
 
     def __repr__(self):
         return "Card rank: " + str(self.rank) + " // Card suit: " + self.suit
 
     def getValue(self):
-        return self.rank
+        if 10 < self.rank < 14:
+            return 10
+        else:
+            return self.value
 
     def getVisual(self):
         return self.visual
